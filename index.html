@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Twin Strings — The Karwaan India Tour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    box-sizing: border-box;
+    --red:#D63941;
+    --red-dark:#B72E36;
+    --red-tint:#FBE9EA;
+    --ink:#19171C;
+    --muted:#726C77;
+    --line:#ECE7EC;
+    --surface:#FFFFFF;
+    --surface-2:#F6F3F6;
+    --cream-1:#EDE2C6;
+    --cream-2:#C8A46B;
+    --olive:#4C5A3C;
+  }
+  *,*::before,*::after{ box-sizing:inherit; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:#E7E4E9;
+    color:var(--ink);
+  }
+  /* column width the phone-frame content is centered to; fixed elements
+     align to these same edges via --edge so they read as "inside the frame"
+     even though they're truly pinned to the real viewport (not a nested
+     scroll container — nested-scroll + position:fixed is unreliable on iOS). */
+  :root{
+    --colw:430px;
+    --edge:max(0px, calc(50% - (var(--colw) / 2)));
+  }
+
+  /* ---------- phone-frame content column (scrolls with the real page) ---------- */
+  .app{
+    position:relative;
+    width:min(100%,var(--colw));
+    margin:0 auto;
+    background:var(--surface);
+    box-shadow:0 0 60px rgba(0,0,0,.12);
+  }
+
+  /* ---------- top nav ---------- */
+  .topnav{
+    position:fixed; top:0; left:var(--edge); right:var(--edge);
+    z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:calc(14px + env(safe-area-inset-top,0px)) 16px 14px;
+    transition:background .25s ease, box-shadow .25s ease;
+  }
+  .topnav .nav-right{ display:flex; gap:10px; }
+  .icon-btn{
+    width:38px; height:38px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(20,18,22,.42);
+    border:none; color:#fff; cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .icon-btn svg{ width:18px; height:18px; }
+  .topnav.solid{
+    background:var(--surface);
+    box-shadow:0 1px 0 var(--line);
+  }
+  .topnav.solid .icon-btn{
+    background:var(--surface-2);
+    color:var(--ink);
+  }
+  .icon-btn.bookmarked{ background:var(--red); color:#fff; }
+  .topnav.solid .icon-btn.bookmarked{ background:var(--red); color:#fff; }
+
+  /* ---------- hero (fixed behind everything, revealed through the spacer) ---------- */
+  .hero-fixed{
+    position:fixed; top:0; left:var(--edge); right:var(--edge); height:58vh; min-height:380px; max-height:520px;
+    z-index:1; overflow:hidden;
+    background:linear-gradient(180deg,var(--cream-1) 0%, var(--cream-2) 62%, #6b6a4f 100%);
+  }
+  .hero-art{ position:relative; width:100%; height:100%; }
+  .hero-badge-row{
+    position:absolute; top:calc(16px + env(safe-area-inset-top,0px)); left:0; right:0;
+    display:flex; justify-content:space-between; padding:0 64px;
+    font-size:10.5px; font-weight:700; letter-spacing:.02em; color:var(--olive);
+    opacity:.85; pointer-events:none;
+  }
+  .hero-word{
+    position:absolute; top:16%; left:0; right:0; text-align:center;
+    font-weight:700; font-size:15px; letter-spacing:.14em; color:var(--olive);
+  }
+  .hero-title{
+    position:absolute; top:23%; left:0; right:0; text-align:center;
+    font-weight:800; font-size:44px; letter-spacing:-.01em; color:var(--olive);
+    line-height:.95;
+  }
+  .hero-sub{
+    position:absolute; top:41%; left:0; right:0; text-align:center;
+    font-weight:700; font-size:14px; letter-spacing:.22em; color:var(--olive);
+  }
+  .hero-van{ position:absolute; top:25%; left:50%; transform:translateX(-50%); width:70%; opacity:.9; }
+  .hero-figures{
+    position:absolute; bottom:0; left:0; width:100%; height:52%;
+    display:flex; align-items:flex-end; justify-content:center; gap:6%;
+  }
+  .hero-figures svg{ height:100%; }
+  .hero-mountains{ position:absolute; bottom:0; left:0; width:100%; height:30%; opacity:.55; }
+
+  .gallery-pill{
+    position:fixed; z-index:2; right:calc(var(--edge) + 16px);
+    display:flex; align-items:center; gap:6px;
+    background:rgba(20,18,22,.55); color:#fff; border:none; cursor:pointer;
+    font-family:inherit; font-size:12.5px; font-weight:600;
+    padding:9px 14px; border-radius:20px;
+    top:calc(58vh - 46px);
+  }
+  .gallery-pill svg{ width:14px; height:14px; }
+
+  .hero-spacer{ height:58vh; min-height:380px; max-height:520px; }
+
+  /* ---------- tray ---------- */
+  .tray{
+    position:relative; z-index:10;
+    background:var(--surface);
+    border-radius:22px 22px 0 0;
+    margin-top:-26px;
+    min-height:calc(100vh - 58vh + 26px);
+    padding:10px 20px 0;
+    box-shadow:0 -8px 24px rgba(0,0,0,.06);
+  }
+  .tray-handle{
+    width:36px; height:4px; border-radius:3px; background:var(--line);
+    margin:6px auto 14px;
+  }
+
+  .chips{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{
+    background:var(--surface-2); color:var(--ink);
+    font-size:12.5px; font-weight:500;
+    padding:6px 14px; border-radius:20px;
+  }
+
+  .event-title{
+    font-size:23px; font-weight:800; line-height:1.28;
+    margin:16px 0 6px; letter-spacing:-.01em;
+  }
+  .event-date{
+    font-size:14.5px; font-weight:600; color:var(--red); margin:0 0 18px;
+  }
+
+  .info-card{
+    display:flex; align-items:center; gap:12px;
+    background:var(--surface-2); border-radius:16px;
+    padding:13px 14px; margin-bottom:10px; cursor:pointer; border:none; width:100%;
+    text-align:left; font-family:inherit;
+  }
+  .info-icon{
+    width:36px; height:36px; border-radius:50%; background:var(--surface);
+    display:flex; align-items:center; justify-content:center; flex:none;
+    color:var(--red);
+  }
+  .info-icon svg{ width:17px; height:17px; }
+  .info-text{ flex:1; min-width:0; }
+  .info-title{ font-size:14.5px; font-weight:600; color:var(--ink); }
+  .info-sub{ font-size:12.5px; font-weight:400; color:var(--muted); margin-top:2px; }
+  .chev{ color:var(--muted); flex:none; }
+  .chev svg{ width:16px; height:16px; }
+
+  section.block{ margin-top:30px; }
+  h2.block-title{ font-size:17.5px; font-weight:700; margin:0 0 14px; }
+
+  .artist-card{ display:flex; gap:12px; align-items:flex-start; margin-bottom:16px; }
+  .avatar{
+    width:52px; height:52px; border-radius:14px; flex:none;
+    background:var(--red-tint); color:var(--red);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:15px;
+  }
+  .artist-name{ font-size:14.5px; font-weight:700; }
+  .artist-bio{ font-size:12.8px; color:var(--muted); margin:3px 0 6px; line-height:1.5; }
+  .link-red{
+    font-size:12.8px; font-weight:600; color:var(--red);
+    background:none; border:none; padding:0; cursor:pointer; font-family:inherit;
+    display:inline-flex; align-items:center; gap:2px;
+  }
+  .link-red svg{ width:13px; height:13px; }
+
+  .tracklist{ list-style:none; margin:0; padding:0; }
+  .track{
+    display:flex; align-items:center; gap:12px;
+    padding:11px 0; border-bottom:1px solid var(--line);
+  }
+  .track:last-child{ border-bottom:none; }
+  .track-index{ font-size:13px; color:var(--muted); width:16px; flex:none; }
+  .track-name{ font-size:14px; font-weight:500; flex:1; }
+  .play-btn{
+    width:30px; height:30px; border-radius:50%; flex:none;
+    border:1.5px solid var(--red); background:var(--surface);
+    color:var(--red); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:background .18s ease,color .18s ease;
+  }
+  .play-btn svg{ width:12px; height:12px; }
+  .play-btn.playing{ background:var(--red); color:#fff; }
+  .play-btn .icon-pause{ display:none; }
+  .play-btn.playing .icon-play{ display:none; }
+  .play-btn.playing .icon-pause{ display:block; }
+
+  .expand-text{
+    font-size:13.8px; line-height:1.65; color:#4C4750; margin:0;
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .expand-text.open{ -webkit-line-clamp:unset; overflow:visible; }
+  .expand-toggle{ margin-top:8px; }
+
+  .facility-list{ list-style:none; margin:0; padding:0; }
+  .facility{
+    display:flex; gap:12px; align-items:flex-start;
+    padding:10px 0; border-bottom:1px solid var(--line); font-size:13.6px; color:var(--ink);
+    line-height:1.5;
+  }
+  .facility:last-of-type{ border-bottom:none; }
+  .facility svg{ width:19px; height:19px; color:var(--red); flex:none; margin-top:1px; }
+  .facility.hidden-row{ display:none; }
+
+  .bullets{ list-style:none; margin:0; padding:0; }
+  .bullets li{
+    position:relative; padding:6px 0 6px 16px; font-size:13.6px; line-height:1.6; color:var(--ink);
+  }
+  .bullets li::before{
+    content:''; position:absolute; left:0; top:14px; width:6px; height:6px;
+    background:var(--red); transform:rotate(45deg);
+  }
+  .bullets li.hidden-row{ display:none; }
+
+  .seatmap{
+    background:var(--surface-2); border-radius:16px; padding:18px 16px; text-align:center;
+  }
+  .stage-bar{
+    background:var(--ink); color:#fff; font-size:11px; font-weight:700; letter-spacing:.08em;
+    border-radius:8px; padding:8px 0; margin-bottom:10px;
+  }
+  .seat-grid{ display:flex; flex-direction:column; gap:6px; align-items:center; }
+  .seat-row{ display:flex; gap:4px; }
+  .seat-block{ width:16px; height:14px; border-radius:2px; }
+  .seat-block.vip{ background:var(--red); opacity:.85; }
+  .seat-block.fanpit{ background:var(--red-dark); opacity:.55; }
+  .ga-bar{
+    width:100%; background:#8FA6C4; color:#fff; font-size:10.5px; font-weight:700;
+    letter-spacing:.06em; border-radius:8px; padding:12px 0; margin-top:6px;
+  }
+  .legend{ display:flex; justify-content:center; gap:16px; margin-top:12px; }
+  .legend-item{ display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
+  .legend-dot{ width:9px; height:9px; border-radius:2px; }
+
+  .organiser-card{ display:flex; align-items:center; gap:12px; }
+  .org-avatar{
+    width:48px; height:48px; border-radius:50%; background:var(--red);
+    display:flex; align-items:center; justify-content:center; color:#fff; flex:none;
+  }
+  .org-avatar svg{ width:22px; height:22px; }
+  .org-name{ font-size:14.5px; font-weight:700; }
+  .org-stats{ display:flex; gap:14px; margin-top:4px; }
+  .org-stat{ font-size:11.5px; color:var(--muted); }
+  .org-stat b{ color:var(--ink); font-weight:600; }
+
+  .tc-row{
+    display:flex; align-items:center; gap:12px; padding:6px 0; cursor:pointer;
+    font-size:13.8px; font-weight:500;
+  }
+  .tc-row svg:first-child{ width:19px; height:19px; color:var(--muted); }
+  .tc-row span{ flex:1; }
+  .tc-row svg:last-child{ width:16px; height:16px; color:var(--muted); }
+
+  .bottom-pad{ height:118px; }
+
+  /* ---------- floating sticky widget ---------- */
+  .floating-widget{
+    position:fixed;
+    left:calc(var(--edge) + 14px); right:calc(var(--edge) + 14px);
+    bottom:calc(14px + env(safe-area-inset-bottom,0px));
+    z-index:60;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:0 10px 28px rgba(20,18,22,.16);
+    padding:12px 12px 12px 16px;
+    display:flex; align-items:center; gap:14px;
+  }
+  .widget-copy{ flex:1; min-width:0; display:flex; align-items:flex-start; gap:8px; }
+  .widget-copy svg{ width:17px; height:17px; color:var(--red); flex:none; margin-top:1px; }
+  .widget-copy p{ margin:0; font-size:12.6px; line-height:1.4; color:var(--ink); }
+  .notify-btn{
+    flex:none; background:var(--red); color:#fff; border:none;
+    font-family:inherit; font-weight:700; font-size:14px;
+    padding:12px 20px; border-radius:24px; cursor:pointer;
+    transition:background .18s ease, transform .12s ease;
+    white-space:nowrap;
+  }
+  .notify-btn:active{ transform:scale(.96); }
+  .notify-btn.done{ background:var(--olive); }
+  .notify-btn.done svg{ width:14px; height:14px; margin-right:5px; vertical-align:-2px; }
+
+  @media (prefers-reduced-motion:no-preference){
+    .play-btn.playing{ animation:pulse 1.6s ease-in-out infinite; }
+  }
+  @keyframes pulse{
+    0%,100%{ box-shadow:0 0 0 0 rgba(214,57,65,.35); }
+    50%{ box-shadow:0 0 0 5px rgba(214,57,65,0); }
+  }
+
+  :focus-visible{ outline:2px solid var(--red); outline-offset:2px; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <header class="topnav" id="topnav">
+    <button class="icon-btn" aria-label="Go back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <div class="nav-right">
+      <button class="icon-btn" id="bookmarkBtn" aria-label="Save event">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+      </button>
+      <button class="icon-btn" aria-label="Share event">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="hero-fixed">
+    <div class="hero-art">
+      <div class="hero-badge-row"><span>LIVE</span><span>KLARATION</span></div>
+      <div class="hero-word">TWIN&nbsp;STRINGS</div>
+      <svg class="hero-van" viewBox="0 0 300 90" fill="none">
+        <rect x="20" y="25" width="260" height="45" rx="10" stroke="#4C5A3C" stroke-width="3"/>
+        <line x1="35" y1="18" x2="265" y2="18" stroke="#4C5A3C" stroke-width="3"/>
+        <line x1="35" y1="18" x2="35" y2="25" stroke="#4C5A3C" stroke-width="3"/>
+        <line x1="265" y1="18" x2="265" y2="25" stroke="#4C5A3C" stroke-width="3"/>
+        <circle cx="70" cy="72" r="13" fill="#4C5A3C"/>
+        <circle cx="230" cy="72" r="13" fill="#4C5A3C"/>
+        <text x="150" y="55" text-anchor="middle" font-family="Inter" font-weight="800" font-size="26" fill="#4C5A3C" letter-spacing="1">KARWAAN</text>
+      </svg>
+      <div class="hero-title" style="top:33%;font-size:0;"></div>
+      <div class="hero-sub" style="top:45%;">INDIA&nbsp;TOUR</div>
+      <div class="hero-figures">
+        <svg viewBox="0 0 40 100" preserveAspectRatio="xMidYMax meet"><path d="M20 8a8 8 0 100 16 8 8 0 000-16zM8 92V52c0-8 6-14 12-14s12 6 12 14v40z" fill="#2A2620" opacity="0.88"/></svg>
+        <svg viewBox="0 0 40 108" preserveAspectRatio="xMidYMax meet"><path d="M20 8a8 8 0 100 16 8 8 0 000-16zM7 100V54c0-9 6-16 13-16s13 7 13 16v46z" fill="#241F19" opacity="0.9"/></svg>
+        <svg viewBox="0 0 40 108" preserveAspectRatio="xMidYMax meet"><path d="M20 8a8 8 0 100 16 8 8 0 000-16zM7 100V54c0-9 6-16 13-16s13 7 13 16v46z" fill="#241F19" opacity="0.9"/></svg>
+        <svg viewBox="0 0 40 100" preserveAspectRatio="xMidYMax meet"><path d="M20 8a8 8 0 100 16 8 8 0 000-16zM8 92V52c0-8 6-14 12-14s12 6 12 14v40z" fill="#2A2620" opacity="0.88"/></svg>
+      </div>
+      <svg class="hero-mountains" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="M0 100 L60 40 L120 80 L190 25 L260 75 L320 45 L400 90 L400 100 Z" fill="#5B5A42"/></svg>
+    </div>
+    <button class="gallery-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+      Gallery
+    </button>
+  </div>
+
+  <div class="hero-spacer"></div>
+
+  <main class="tray">
+    <div class="tray-handle"></div>
+
+    <div class="chips">
+      <span class="chip">Concerts</span>
+      <span class="chip">Music</span>
+      <span class="chip">Performances</span>
+    </div>
+
+    <h1 class="event-title">Twin Strings The Karwaan India Tour | Bengaluru</h1>
+    <p class="event-date">Sun, 27 Sept · 7:00 PM</p>
+
+    <button class="info-card">
+      <span class="info-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 1118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+      </span>
+      <span class="info-text">
+        <span class="info-title">Sunburn Union, Bengaluru</span>
+        <span class="info-sub">3.4 km away</span>
+      </span>
+      <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+    </button>
+
+    <button class="info-card">
+      <span class="info-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 16 14"></polyline></svg>
+      </span>
+      <span class="info-text">
+        <span class="info-title">Starts at 7 PM</span>
+        <span class="info-sub">View full schedule &amp; timeline</span>
+      </span>
+      <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+    </button>
+
+    <section class="block">
+      <h2 class="block-title">Who's taking the stage</h2>
+      <div class="artist-card">
+        <div class="avatar">TS</div>
+        <div>
+          <div class="artist-name">Twin Strings</div>
+          <p class="artist-bio">A four-piece Indian indie-folk band known for warm acoustic melodies and heartfelt lyrics.</p>
+          <button class="link-red">Know more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+        </div>
+      </div>
+
+      <ol class="tracklist">
+        <li class="track"><span class="track-index">1</span><span class="track-name">Baarish Ka Asar</span><button class="play-btn" aria-label="Play preview"><svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"></polygon></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></button></li>
+        <li class="track"><span class="track-index">2</span><span class="track-name">Dhalti Rahe</span><button class="play-btn" aria-label="Play preview"><svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"></polygon></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></button></li>
+        <li class="track"><span class="track-index">3</span><span class="track-name">Doorie</span><button class="play-btn" aria-label="Play preview"><svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"></polygon></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></button></li>
+        <li class="track"><span class="track-index">4</span><span class="track-name">Baat Itni Si Hai</span><button class="play-btn" aria-label="Play preview"><svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"></polygon></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></button></li>
+        <li class="track"><span class="track-index">5</span><span class="track-name">Tujhse Hoti Hai Subha</span><button class="play-btn" aria-label="Play preview"><svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"></polygon></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></button></li>
+      </ol>
+    </section>
+
+    <section class="block">
+      <h2 class="block-title">About the event</h2>
+      <p class="expand-text" id="aboutText">Twin Strings bring their fan-favourite live show to Bengaluru as part of The Karwaan India Tour — an evening built around old songs, new stories, and the kind of set that turns strangers into a singalong. Expect a mix of fan favourites, a few surprises, and the band's signature acoustic warmth carried live end to end.</p>
+      <button class="link-red expand-toggle" data-target="aboutText" data-more="Read more" data-less="Show less">Read more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+    </section>
+
+    <section class="block">
+      <h2 class="block-title">Facilities at the event</h2>
+      <ul class="facility-list" id="facilityList">
+        <li class="facility"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 8h3a3 3 0 010 6H9V8z"></path><line x1="9" y1="14" x2="9" y2="17"></line></svg><span>Paid parking available</span></li>
+        <li class="facility"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="4" r="1.6"></circle><path d="M12 8v5l4 4M12 13l-3 6M6 20l3-7 3-2"></path></svg><span>Limited wheelchair accessibility (check with venue)</span></li>
+        <li class="facility hidden-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v4M16 3v4M4 9h16"></path><rect x="4" y="5" width="16" height="16" rx="2"></rect></svg><span>Medical support: first aid only</span></li>
+        <li class="facility hidden-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 9h4M7 13h2"></path></svg><span>Separate washrooms with wheelchair accessibility</span></li>
+      </ul>
+      <button class="link-red expand-toggle" data-target="facilityList" data-more="View more" data-less="View less" data-rows>View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+    </section>
+
+    <section class="block">
+      <h2 class="block-title">Things to know</h2>
+      <ul class="bullets" id="thingsList">
+        <li>Entry allowed for ages 5 and above</li>
+        <li>Tickets required for ages 5 and above</li>
+        <li>Pets are not allowed</li>
+        <li class="hidden-row">ID (Aadhaar/PAN/DL/Passport) required for entry</li>
+        <li class="hidden-row">Indoor venue with AC, standing area only — no seating</li>
+        <li class="hidden-row">Photography and recording allowed</li>
+      </ul>
+      <button class="link-red expand-toggle" data-target="thingsList" data-more="View more" data-less="View less" data-rows>View more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+    </section>
+
+    <section class="block">
+      <h2 class="block-title">Gallery</h2>
+      <div class="seatmap">
+        <div class="stage-bar">STAGE</div>
+        <div class="seat-grid">
+          <div class="seat-row">
+            <div class="seat-block fanpit"></div><div class="seat-block fanpit"></div><div class="seat-block fanpit"></div><div class="seat-block fanpit"></div>
+          </div>
+          <div class="seat-row">
+            <div class="seat-block vip"></div><div class="seat-block vip"></div><div class="seat-block vip"></div><div class="seat-block vip"></div><div class="seat-block vip"></div><div class="seat-block vip"></div>
+          </div>
+        </div>
+        <div class="ga-bar">GENERAL ADMISSION — STANDING</div>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--red-dark);opacity:.55"></span>Fan pit</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--red);opacity:.85"></span>VIP</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#8FA6C4"></span>GA</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2 class="block-title">Organised by</h2>
+      <div class="organiser-card">
+        <div class="org-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a8 8 0 0116 0v1"></path></svg>
+        </div>
+        <div>
+          <div class="org-name">Laughing Water Productions LLP</div>
+          <div class="org-stats">
+            <span class="org-stat"><b>1</b> hosted event</span>
+            <span class="org-stat"><b>1 month</b> hosting</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2 class="block-title">More</h2>
+      <div class="tc-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        <span>Terms and conditions</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
+    </section>
+
+    <div class="bottom-pad"></div>
+  </main>
+
+  <div class="floating-widget">
+    <div class="widget-copy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg>
+      <p>We'll remind you to book a metro closer to the event.</p>
+    </div>
+    <button class="notify-btn" id="notifyBtn">Get notified</button>
+  </div>
+
+</div>
+
+<script>
+  (function(){
+    var topnav = document.getElementById('topnav');
+    var heroSpacer = document.querySelector('.hero-spacer');
+
+    function onScroll(){
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      var threshold = heroSpacer.offsetHeight - 88;
+      if (scrollTop > threshold) topnav.classList.add('solid');
+      else topnav.classList.remove('solid');
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+
+    var bookmarkBtn = document.getElementById('bookmarkBtn');
+    bookmarkBtn.addEventListener('click', function(){
+      bookmarkBtn.classList.toggle('bookmarked');
+    });
+
+    var playBtns = document.querySelectorAll('.play-btn');
+    playBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var wasPlaying = btn.classList.contains('playing');
+        playBtns.forEach(function(b){ b.classList.remove('playing'); });
+        if (!wasPlaying) btn.classList.add('playing');
+      });
+    });
+
+    var toggles = document.querySelectorAll('.expand-toggle');
+    toggles.forEach(function(btn){
+      var target = document.getElementById(btn.dataset.target);
+      var arrow = btn.querySelector('svg');
+      btn.addEventListener('click', function(){
+        var isOpen = target.classList.toggle('open');
+        if (btn.hasAttribute('data-rows')) {
+          target.querySelectorAll('.hidden-row').forEach(function(row){
+            row.style.display = isOpen ? 'flex' : 'none';
+          });
+          // bullets use <li>, not flex
+          if (target.tagName === 'UL' && target.classList.contains('bullets')) {
+            target.querySelectorAll('.hidden-row').forEach(function(row){
+              row.style.display = isOpen ? 'list-item' : 'none';
+            });
+          }
+        }
+        btn.firstChild.textContent = isOpen ? btn.dataset.less + ' ' : btn.dataset.more + ' ';
+        arrow.style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0deg)';
+      });
+    });
+
+    var notifyBtn = document.getElementById('notifyBtn');
+    notifyBtn.addEventListener('click', function(){
+      if (notifyBtn.classList.contains('done')) return;
+      notifyBtn.classList.add('done');
+      notifyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Notified';
+    });
+  })();
+</script>
+</body>
+</html>
