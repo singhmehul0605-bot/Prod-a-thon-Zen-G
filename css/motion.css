@@ -1,0 +1,57 @@
+/* Spring-driven states toggled by js/app.js (transform only — compositor friendly) */
+
+.is-swapping .field__value{ transition: none; }
+
+.counter__value.is-popping{
+  animation: counterPop 260ms var(--ease-standard);
+}
+@keyframes counterPop{
+  0%{ transform: scale(1); }
+  40%{ transform: scale(1.18); }
+  100%{ transform: scale(1); }
+}
+
+.swap-btn.is-spinning{ animation: swapSpin 420ms var(--ease-standard); }
+@keyframes swapSpin{
+  from{ transform: rotate(0deg); }
+  to{ transform: rotate(180deg); }
+}
+
+/* ---------- accessibility: motion, transparency, contrast ---------- */
+@media (prefers-reduced-motion: reduce){
+  .hero__video, .hero__overlay, .tab, .tab__logo, .link-btn, .swap-btn, .pay-btn,
+  .bnav-item, .counter__btn, .counter__value, .dot--active{
+    animation: none !important;
+    transition: opacity 200ms ease !important;
+    transform: none !important;
+  }
+  .hero__video{ opacity: 1; }
+  .hero__overlay{ opacity: 1; }
+  /* ambient sampling is skipped in js — keep the static wash, hide the empty canvas */
+  .ambient canvas{ display: none; }
+}
+
+@media (prefers-reduced-transparency: reduce){
+  .topnav__scrim{
+    background: rgba(10,10,11,0.92);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .hero__tag{
+    background: rgba(10,10,11,0.85);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .hero__vibrancy{
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: linear-gradient(180deg, transparent 44%, rgba(0,0,0,0.55) 72%, rgba(0,0,0,0.85) 100%);
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+@media (prefers-contrast: more){
+  .tab__label{ color: #fff; text-shadow: none; }
+  .hero__tag{ background: #000; border-color: #fff; }
+}

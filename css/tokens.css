@@ -1,0 +1,79 @@
+/*
+  Scaling system
+  --------------
+  The design is authored at a 360px reference frame (the Figma frame width).
+  Every dimension below is expressed as N * --vu, where --vu is 1 Figma-px
+  mapped to the live viewport. This makes the whole page scale uniformly
+  on any screen — no breakpoints, no reflow — instead of "responsive"
+  rearrangement. Scaling freezes past 640px so the layout doesn't balloon
+  into an oversized mobile card on desktop; the ambient wash fills the rest.
+*/
+:root{
+  --frame: 360;
+  --vu: calc(min(100vw, 640px) / var(--frame));
+
+  /* spacing scale (Figma spacing tokens) */
+  --sp-0: 0px;
+  --sp-4:  calc(var(--vu) * 4);
+  --sp-8:  calc(var(--vu) * 8);
+  --sp-10: calc(var(--vu) * 10);
+  --sp-12: calc(var(--vu) * 12);
+  --sp-16: calc(var(--vu) * 16);
+  --sp-24: calc(var(--vu) * 24);
+
+  /* radii */
+  --r-12: calc(var(--vu) * 12);
+  --r-16: calc(var(--vu) * 16);
+  --r-pill: 9999px;
+
+  /* type scale (size / line-height / tracking), all in vu */
+  --fs-12: calc(var(--vu) * 12);
+  --lh-16: calc(var(--vu) * 16);
+
+  --fs-13: calc(var(--vu) * 13);
+  --lh-18: calc(var(--vu) * 18);
+
+  --fs-14: calc(var(--vu) * 14);
+  --lh-20: calc(var(--vu) * 20);
+
+  --fs-16: calc(var(--vu) * 16);
+  --lh-24: calc(var(--vu) * 24);
+
+  --fs-18: calc(var(--vu) * 18);
+  --fs-22: calc(var(--vu) * 22);
+  --lh-26: calc(var(--vu) * 26);
+
+  --ls-tight:   calc(var(--vu) * -0.18);
+  --ls-medium:  calc(var(--vu) * -0.08);
+  --ls-heading: calc(var(--vu) * -0.4);
+
+  /* color tokens, lifted verbatim from the Figma file */
+  --c-bg-inverse: #303030;
+  --c-bg-component: #ffffff;
+  --c-text-primary: #1d1d1d;
+  --c-text-secondary: #6f6f6f;
+  --c-text-inverse: #fcfcfc;
+  --c-text-success: #007b28;
+  --c-success-strong: #008531;
+  --c-primary: #d63941;
+  --c-primary-container: #fed9d5;
+  --c-border-subtle: #b0b0b0;
+  --c-border-divider: #e5e5e5;
+  --c-outline: #4a4a4a;
+  --c-outline-disabled: #e5e5e5;
+  --c-link: #0000ee;
+
+  --shadow-elevation-2: 0 calc(var(--vu) * 1) calc(var(--vu) * 12) rgba(29,29,29,0.16);
+
+  /* ambient mode — js/app.js samples the playing video and drives these */
+  --amb-top: 58, 24, 28;
+  --amb-mid: 36, 16, 20;
+  --amb-bottom: 20, 12, 16;
+
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 359px){
+  /* below the smallest realistic phone width, stop shrinking type past legibility */
+  :root{ --vu: calc(max(100vw, 320px) / var(--frame)); }
+}

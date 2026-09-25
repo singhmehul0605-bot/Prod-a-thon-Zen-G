@@ -1,0 +1,26 @@
+<svg width="720" height="718" viewBox="0 0 720 718" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="glow" cx="30%" cy="8%" r="75%">
+      <stop offset="0%" stop-color="#5a1a1e"/>
+      <stop offset="45%" stop-color="#241014"/>
+      <stop offset="100%" stop-color="#141416"/>
+    </radialGradient>
+    <linearGradient id="tint" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d63941" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#d63941" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="718" fill="url(#glow)"/>
+  <rect width="720" height="718" fill="url(#tint)"/>
+  <g opacity="0.2" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(230,300)">
+    <rect x="0" y="0" width="260" height="150" rx="26"/>
+    <line x1="0" y1="46" x2="260" y2="46"/>
+    <circle cx="52" cy="150" r="16"/>
+    <circle cx="208" cy="150" r="16"/>
+    <rect x="24" y="70" width="70" height="46" rx="8"/>
+    <rect x="166" y="70" width="70" height="46" rx="8"/>
+  </g>
+  <text x="360" y="220" text-anchor="middle" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#ffffff" fill-opacity="0.4" letter-spacing="0.5">
+    PROMO VIDEO PLACEHOLDER
+  </text>
+</svg>
