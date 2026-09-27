@@ -81,18 +81,22 @@
   .hero-fixed{
     position:fixed; top:0; left:var(--edge); right:var(--edge); height:58vh; min-height:380px; max-height:520px;
     z-index:1; overflow:hidden;
-    background:linear-gradient(180deg,var(--cream-1) 0%, var(--cream-2) 62%, #6b6a4f 100%);
+    background:
+      linear-gradient(180deg, rgba(10,8,14,.25) 0%, rgba(10,8,14,.15) 45%, rgba(10,8,14,.75) 100%),
+      url('assets/events/coldplay.webp');
+    background-size:cover; background-position:center 30%;
   }
   .hero-art{ position:relative; width:100%; height:100%; }
   .hero-badge-row{
     position:absolute; top:calc(16px + env(safe-area-inset-top,0px)); left:0; right:0;
     display:flex; justify-content:space-between; padding:0 64px;
-    font-size:10.5px; font-weight:700; letter-spacing:.02em; color:var(--olive);
+    font-size:10.5px; font-weight:700; letter-spacing:.02em; color:#fff;
     opacity:.85; pointer-events:none;
   }
   .hero-word{
-    position:absolute; top:16%; left:0; right:0; text-align:center;
-    font-weight:700; font-size:15px; letter-spacing:.14em; color:var(--olive);
+    position:absolute; top:58%; left:0; right:0; text-align:center;
+    font-weight:800; font-size:34px; letter-spacing:-.01em; color:#fff;
+    text-shadow:0 2px 12px rgba(0,0,0,.5);
   }
   .hero-title{
     position:absolute; top:23%; left:0; right:0; text-align:center;
@@ -100,16 +104,10 @@
     line-height:.95;
   }
   .hero-sub{
-    position:absolute; top:41%; left:0; right:0; text-align:center;
-    font-weight:700; font-size:14px; letter-spacing:.22em; color:var(--olive);
+    position:absolute; top:69%; left:0; right:0; text-align:center;
+    font-weight:700; font-size:14px; letter-spacing:.22em; color:rgba(255,255,255,.85);
+    text-shadow:0 2px 8px rgba(0,0,0,.5);
   }
-  .hero-van{ position:absolute; top:25%; left:50%; transform:translateX(-50%); width:70%; opacity:.9; }
-  .hero-figures{
-    position:absolute; bottom:0; left:0; width:100%; height:52%;
-    display:flex; align-items:flex-end; justify-content:center; gap:6%;
-  }
-  .hero-figures svg{ height:100%; }
-  .hero-mountains{ position:absolute; bottom:0; left:0; width:100%; height:30%; opacity:.55; }
 
   .gallery-pill{
     position:fixed; z-index:2; right:calc(var(--edge) + 16px);
@@ -337,24 +335,8 @@
     <div class="hero-art">
       <div class="hero-badge-row"><span>LIVE</span><span>KLARATION</span></div>
       <div class="hero-word">COLDPLAY</div>
-      <svg class="hero-van" viewBox="0 0 300 90" fill="none">
-        <rect x="20" y="25" width="260" height="45" rx="10" stroke="#4C5A3C" stroke-width="3"/>
-        <line x1="35" y1="18" x2="265" y2="18" stroke="#4C5A3C" stroke-width="3"/>
-        <line x1="35" y1="18" x2="35" y2="25" stroke="#4C5A3C" stroke-width="3"/>
-        <line x1="265" y1="18" x2="265" y2="25" stroke="#4C5A3C" stroke-width="3"/>
-        <circle cx="70" cy="72" r="13" fill="#4C5A3C"/>
-        <circle cx="230" cy="72" r="13" fill="#4C5A3C"/>
-        <text x="150" y="55" text-anchor="middle" font-family="Inter" font-weight="800" font-size="26" fill="#4C5A3C" letter-spacing="1">WORLD TOUR</text>
-      </svg>
       <div class="hero-title" style="top:33%;font-size:0;"></div>
-      <div class="hero-sub" style="top:45%;">LIVE&nbsp;IN&nbsp;BENGALURU</div>
-      <div class="hero-figures">
-        <svg viewBox="0 0 40 100" preserveAspectRatio="xMidYMax meet"><path d="M20 8a8 8 0 100 16 8 8 0 000-16zM8 92V52c0-8 6-14 12-14s12 6 12 14v40z" fill="#2A2620" opacity="0.88"/></svg>
-        <svg viewBox="0 0 40 108" preserveAspectRatio="xMidYMax meet"><path d="M20 8a8 8 0 100 16 8 8 0 000-16zM7 100V54c0-9 6-16 13-16s13 7 13 16v46z" fill="#241F19" opacity="0.9"/></svg>
-        <svg viewBox="0 0 40 108" preserveAspectRatio="xMidYMax meet"><path d="M20 8a8 8 0 100 16 8 8 0 000-16zM7 100V54c0-9 6-16 13-16s13 7 13 16v46z" fill="#241F19" opacity="0.9"/></svg>
-        <svg viewBox="0 0 40 100" preserveAspectRatio="xMidYMax meet"><path d="M20 8a8 8 0 100 16 8 8 0 000-16zM8 92V52c0-8 6-14 12-14s12 6 12 14v40z" fill="#2A2620" opacity="0.88"/></svg>
-      </div>
-      <svg class="hero-mountains" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="M0 100 L60 40 L120 80 L190 25 L260 75 L320 45 L400 90 L400 100 Z" fill="#5B5A42"/></svg>
+      <div class="hero-sub">WORLD&nbsp;TOUR&nbsp;·&nbsp;LIVE&nbsp;IN&nbsp;BENGALURU</div>
     </div>
     <button class="gallery-pill">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
