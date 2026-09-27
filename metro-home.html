@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Bengaluru Metro — redBus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/styles.css?v=3" />
+<link rel="stylesheet" href="css/motion.css" />
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- Ambient mode: a heavily blurred, scaled copy of the current video frame,
+       painted on the frame's own surface so the light shows through the gutters
+       around the search sheet. -->
+  <div class="ambient" aria-hidden="true">
+    <canvas id="ambientCanvas" width="48" height="27"></canvas>
+  </div>
+
+  <!-- ============ HERO : video + translucent nav + Apple-TV style gradient/text ============ -->
+  <section class="hero" id="hero">
+
+    <div class="hero__media">
+      <video class="hero__video" id="heroVideo" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.svg">
+        <source src="assets/hero-video.mp4" type="video/mp4" />
+      </video>
+      <div class="hero__ambient" aria-hidden="true"></div>
+      <div class="hero__vibrancy" aria-hidden="true"></div>
+    </div>
+
+    <!-- floating translucent top nav, overlaid on the video -->
+    <header class="topnav" id="topnav">
+      <div class="topnav__scrim" aria-hidden="true"></div>
+      <nav class="topnav__tabs" role="tablist" aria-label="Travel modes">
+        <button class="tab" role="tab" aria-selected="false" data-tab="bus">
+          <span class="tab__logo"><img src="assets/logos/redbus.svg" alt="" width="48" height="31" /></span>
+          <span class="tab__label">Bus tickets</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="rail">
+          <span class="tab__logo"><img src="assets/logos/rail.svg" alt="" width="48" height="26" /></span>
+          <span class="tab__label">Train tickets</span>
+        </button>
+        <button class="tab tab--active" role="tab" aria-selected="true" data-tab="metro">
+          <span class="tab__logo"><img src="assets/logos/metro-mark.svg" alt="" width="49" height="32" /></span>
+          <span class="tab__label">Metro Tickets</span>
+          <span class="tab__indicator" aria-hidden="true"></span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Apple-TV style gradient scrim + overlay copy, bottom of hero.
+         The track is a draggable 3-panel window (prev/current/next) —
+         grab and swipe it like any native carousel; js/app.js owns the
+         panel content, drag physics and auto-advance. -->
+    <div class="hero__overlay" id="heroOverlay">
+      <div class="hero__track" id="heroTrack">
+        <div class="hero__track__row" id="heroTrackRow">
+          <div class="hero__slide"><h1 class="hero__title"></h1><p class="hero__subtitle"></p></div>
+          <div class="hero__slide"><h1 class="hero__title"></h1><p class="hero__subtitle"></p></div>
+          <div class="hero__slide"><h1 class="hero__title"></h1><p class="hero__subtitle"></p></div>
+        </div>
+      </div>
+      <a class="hero__cta" href="events-home.html">Know more <span class="hero__cta-arrow" aria-hidden="true">›</span></a>
+
+      <div class="hero__dots" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- ============ SEARCH SHEET ============ -->
+  <main class="sheet">
+
+    <div class="sheet__heading">
+      <div class="heading__text">
+        <h2 class="heading__title">Bengaluru Metro</h2>
+        <p class="heading__subtitle">Get 5% off on all bookings</p>
+      </div>
+      <img class="heading__mark" src="assets/logos/namma-metro.svg" alt="Namma Metro" width="48" height="48" />
+    </div>
+
+    <button class="link-btn" id="changeCity" type="button">Change city</button>
+
+    <div class="search-card">
+      <div class="field-group">
+
+        <div class="field" data-field="from">
+          <span class="field__icon"><img src="assets/icons/train.svg" alt="" width="24" height="24" /></span>
+          <span class="field__labels">
+            <span class="field__caption">From</span>
+            <span class="field__value" id="fromValue">Indiranagar</span>
+          </span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field" data-field="to">
+          <span class="field__icon"><img src="assets/icons/train.svg" alt="" width="24" height="24" /></span>
+          <span class="field__labels">
+            <span class="field__caption">To</span>
+            <span class="field__value" id="toValue">Cubbon Park</span>
+          </span>
+        </div>
+
+        <button class="swap-btn" id="swapBtn" type="button" aria-label="Swap from and to">
+          <img src="assets/icons/swap_vert.svg" alt="" width="24" height="24" />
+        </button>
+
+        <div class="divider"></div>
+
+        <div class="field field--passengers">
+          <span class="field__icon field__icon--person">
+            <img src="assets/icons/person.svg" alt="" width="24" height="24" />
+          </span>
+          <span class="field__labels">
+            <span class="field__title">Passengers</span>
+            <span class="field__caption2">Price / person</span>
+          </span>
+
+          <div class="counter" id="counter">
+            <button class="counter__btn counter__btn--minus" id="counterMinus" type="button" aria-label="Remove passenger">
+              <img src="assets/icons/delete.svg" alt="" width="24" height="24" />
+            </button>
+            <span class="counter__value" id="counterValue">1</span>
+            <button class="counter__btn counter__btn--plus" id="counterPlus" type="button" aria-label="Add passenger">
+              <img src="assets/icons/add.svg" alt="" width="24" height="24" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="pay-btn" id="payBtn" type="button">
+      <span class="pay-btn__label">Pay ₹<span id="payAmount">60</span></span>
+    </button>
+
+    <div class="partner-row">
+      <span class="partner-row__text">Part of</span>
+      <img class="partner-row__mark" src="assets/logos/ondc-network.svg" alt="ONDC Network" width="126" height="15" />
+      <a class="partner-row__tc" href="#" id="tcLink">T&amp;C</a>
+    </div>
+  </main>
+
+  <!-- ============ BOTTOM NAVIGATION ============ -->
+  <nav class="bottomnav" aria-label="Primary">
+    <button class="bnav-item bnav-item--active" data-nav="home" type="button">
+      <svg class="bnav-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9a1 1 0 0 0 1 1h3v-5a2 2 0 1 1 4 0v5h3a1 1 0 0 0 1-1v-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="bnav-label">Home</span>
+    </button>
+    <button class="bnav-item" data-nav="bookings" type="button">
+      <svg class="bnav-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span class="bnav-label">Bookings</span>
+    </button>
+    <button class="bnav-item" data-nav="help" type="button">
+      <svg class="bnav-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.8"/><path d="M9.7 9.6a2.3 2.3 0 1 1 3.3 2.1c-.9.5-1 1-1 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.4" r="0.9" fill="currentColor"/></svg>
+      <span class="bnav-label">Help</span>
+    </button>
+    <button class="bnav-item" data-nav="account" type="button">
+      <svg class="bnav-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.8" r="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M6.6 18.2c1-2.2 3-3.3 5.4-3.3s4.4 1.1 5.4 3.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span class="bnav-label">Account</span>
+    </button>
+    <div class="bnav-handle" aria-hidden="true"></div>
+  </nav>
+
+</div>
+
+<script src="js/app.js?v=9"></script>
+</body>
+</html>

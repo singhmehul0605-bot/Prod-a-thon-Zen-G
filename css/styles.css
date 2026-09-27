@@ -84,6 +84,9 @@ a{ color: inherit; }
   /* dissolve the lower third into the ambient behind it */
   -webkit-mask-image: linear-gradient(180deg, #000 66%, rgba(0,0,0,0.35) 88%, transparent 100%);
   mask-image: linear-gradient(180deg, #000 66%, rgba(0,0,0,0.35) 88%, transparent 100%);
+  /* no CSS transition here on purpose — the slider (js/app.js) drives this
+     opacity every animation frame (drag tracking + spring settle), and a
+     CSS transition would lag a step behind hands-on input */
 }
 
 /* vignette for status-bar / nav / hero-text legibility. Top and mid only —
@@ -209,6 +212,32 @@ a{ color: inherit; }
   animation: heroCopyIn 700ms var(--ease-standard) 320ms forwards;
 }
 
+/* -------- draggable slide track: prev/current/next, grabbed 1:1 -------- */
+.hero__track{
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.hero__track:active{ cursor: grabbing; }
+.hero__track__row{
+  display: flex;
+  width: 300%;
+  will-change: transform;
+}
+.hero__slide{
+  flex: 0 0 calc(100% / 3);
+  width: calc(100% / 3);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .hero__title{
   margin: 0;
   font-size: var(--fs-22);
@@ -227,25 +256,33 @@ a{ color: inherit; }
   text-shadow: 0 1px 8px rgba(0,0,0,0.4);
 }
 
-/* Apple-TV style section-header link — "Top 10 on Apple TV ›": bold,
-   body-header weight/size, chevron sitting tight against the text. */
+/* Figma's DroidButton "Tonal Inverse" chip — white pill, dark bold label,
+   soft elevation-1 shadow. Scaled down from its 40px "Regular" spec (77×40,
+   16px h-padding) to a compact 32px chip: same look, lighter footprint. */
 .hero__cta{
-  display:flex; align-items:center; gap: calc(var(--vu)*2);
-  margin-top: calc(var(--vu)*2);
+  display:flex; align-items:center; gap: calc(var(--vu)*3);
+  margin-top: calc(var(--vu)*4);
+  height: calc(var(--vu)*32);
+  padding: 0 calc(var(--vu)*13);
+  border-radius: var(--r-pill);
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.24), 0 1px 3px rgba(0,0,0,0.12);
+  font-size: var(--fs-13);
+  font-weight: 700;
+  letter-spacing: var(--ls-medium);
+  color: var(--c-text-primary);
+  text-decoration: none;
+  transition: transform 120ms var(--ease-standard), box-shadow 120ms var(--ease-standard);
+}
+.hero__cta:active{
+  transform: scale(0.96);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+.hero__cta-arrow{
   font-size: var(--fs-16);
   font-weight: 700;
-  letter-spacing: var(--ls-tight);
-  color: #fff;
-  text-decoration: none;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.4);
-  transition: opacity 120ms;
-}
-.hero__cta:active{ opacity: 0.6; }
-.hero__cta-arrow{
-  font-size: var(--fs-18);
-  font-weight: 600;
   line-height: 1;
-  transform: translateY(1px);
+  transform: translateY(0.5px);
 }
 
 .hero__dots{

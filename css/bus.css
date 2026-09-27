@@ -1,0 +1,256 @@
+/* =========================================================
+   Bus Buddy — Figma node 45:7276 (ticket/tray content) +
+   the shared video hero component (index.html/metro-buddy.html)
+   Reuses .app / .ambient / .hero / .sheet / .tray / .tray__handle /
+   .ticket-topbar / .scallop verbatim; everything below is this
+   page's own tabs strip + bus ticket card.
+   ========================================================= */
+
+/* -------- tabs -------- */
+.bus-tabs{
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--c-border-divider);
+  background: var(--c-bg-component);
+}
+.bus-tabs::-webkit-scrollbar{ display: none; }
+.bus-tab{
+  flex-shrink: 0;
+  padding: 0 var(--sp-16);
+  height: calc(var(--vu) * 48);
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  font-weight: 500;
+  color: var(--c-text-primary);
+  white-space: nowrap;
+  position: relative;
+}
+.bus-tab--active{
+  font-weight: 700;
+  color: var(--c-primary);
+}
+.bus-tab--active::after{
+  content: "";
+  position: absolute;
+  left: var(--sp-16); right: var(--sp-16); bottom: 0;
+  height: calc(var(--vu) * 3);
+  background: var(--c-primary);
+  border-radius: 100px 100px 0 0;
+}
+
+/* -------- bus ticket card -------- */
+.bus-ticket-wrap{ padding: var(--sp-16); }
+.bus-ticket{
+  width: 100%;
+  border-radius: var(--r-16);
+  overflow: hidden;
+  box-shadow: 0 calc(var(--vu)*4) calc(var(--vu)*8) rgba(29,29,29,0.08);
+}
+
+.bus-ticket__route{
+  background: var(--c-primary);
+  padding: var(--sp-16) 0 0;
+  display: flex;
+  flex-direction: column;
+}
+.bus-stop{
+  display: flex;
+  gap: var(--sp-8);
+  padding: 0 var(--sp-16) 0 var(--sp-8);
+}
+.bus-stop__graphic{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(var(--vu) * 20);
+  flex-shrink: 0;
+}
+.bus-stop__dot{
+  display: flex; align-items: center; justify-content: center;
+  width: calc(var(--vu) * 12); height: calc(var(--vu) * 12);
+  border-radius: 50%;
+  background: #fff;
+  flex-shrink: 0;
+}
+.bus-stop__line{
+  width: 1px;
+  flex: 1;
+  min-height: calc(var(--vu) * 16);
+  background: rgba(255,255,255,0.4);
+}
+.bus-stop__body{ flex: 1; min-width: 0; padding-bottom: var(--sp-16); }
+.bus-stop__head{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-8);
+}
+.bus-stop__city{
+  font-size: var(--fs-22);
+  line-height: calc(var(--vu)*28);
+  font-weight: 700;
+  letter-spacing: var(--ls-heading);
+  color: var(--c-text-inverse);
+}
+.bus-stop__time{
+  font-size: var(--fs-22);
+  line-height: calc(var(--vu)*28);
+  font-weight: 700;
+  letter-spacing: var(--ls-heading);
+  color: var(--c-text-inverse);
+  white-space: nowrap;
+}
+.bus-stop__addr, .bus-stop__date{
+  font-size: var(--fs-12);
+  line-height: var(--lh-16);
+  color: var(--c-text-inverse);
+}
+
+.bus-duration{
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+  padding: 0 var(--sp-16) 0 calc(var(--vu)*36);
+  height: calc(var(--vu) * 32);
+}
+.bus-duration__line{
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.4);
+}
+.bus-duration__logo{ height: calc(var(--vu)*16); width: auto; flex-shrink: 0; }
+.bus-duration__text{
+  font-size: var(--fs-12);
+  line-height: var(--lh-16);
+  color: var(--c-text-inverse);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.bus-layover{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  padding: var(--sp-8);
+  color: var(--c-text-inverse);
+  font-size: var(--fs-12);
+  line-height: var(--lh-16);
+  font-weight: 700;
+}
+.bus-layover img{ filter: brightness(0) invert(1); }
+.bus-layover__divider{
+  height: 1px;
+  background: rgba(255,255,255,0.25);
+}
+
+.bus-ticket__info{
+  background: var(--c-bg-component);
+  padding: var(--sp-16);
+}
+.bus-plate-row{ margin-bottom: 2px; }
+.bus-plate{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: 0 var(--sp-4);
+  border: 1px solid #1d1d1d;
+  border-radius: calc(var(--vu)*4);
+  background: #f4bf08;
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  font-weight: 700;
+  letter-spacing: var(--ls-medium);
+  color: #1d1d1d;
+}
+.bus-operator{
+  margin: 0 0 var(--sp-8);
+  font-size: var(--fs-16);
+  line-height: var(--lh-24);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+  color: var(--c-text-primary);
+}
+.bus-pax-row{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-8);
+}
+.bus-pax-names{
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--vu)*6);
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  color: var(--c-text-primary);
+}
+.bus-seats{
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--vu)*6);
+  flex-shrink: 0;
+}
+.bus-seat{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(var(--vu)*40);
+  height: calc(var(--vu)*20);
+  padding: 0 var(--sp-8);
+  border-radius: var(--r-pill);
+  background: #e4ecfd;
+  font-size: var(--fs-12);
+  line-height: var(--lh-16);
+  font-weight: 700;
+  letter-spacing: 0.01px;
+  color: #285bf3;
+}
+.bus-pax-extra{
+  margin: calc(var(--vu)*4) 0 0;
+  font-size: var(--fs-12);
+  line-height: var(--lh-16);
+  color: rgba(29,29,29,0.64);
+}
+
+.bus-ticket__scallop{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--tray-bg, #f0eef1);
+}
+.bus-ticket__scallop .scallop{ display: block; width: 100%; height: auto; }
+.bus-ticket__scallop .scallop--bottom{ transform: scaleY(-1); }
+
+.bus-ticket__cta{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-bg-component);
+  padding: 0 var(--sp-8) var(--sp-16);
+}
+.bus-cta-link{
+  display: flex;
+  align-items: center;
+  gap: calc(var(--vu)*2);
+  height: calc(var(--vu)*40);
+  padding: 0 var(--sp-16);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-14);
+  font-weight: 700;
+  letter-spacing: var(--ls-medium);
+  color: var(--c-text-primary);
+  transition: transform 120ms var(--ease-standard), background 120ms;
+}
+.bus-cta-link:active{ transform: scale(0.97); background: #fafafa; }
+
+.bus-info-note{
+  margin: var(--sp-16) var(--sp-8) 0;
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  text-align: center;
+  color: rgba(29,29,29,0.69);
+}
+.bus-info-note b{ font-weight: 700; }

@@ -240,7 +240,7 @@
     <h2 class="section-title">Events near your favourite locations</h2>
     <div class="hscroll">
 
-      <a class="poster-card">
+      <a class="poster-card" href="events.html">
         <div class="poster-art" style="background:linear-gradient(160deg,#EDE2C6,#8C8A63)">
           <button class="notify-btn" data-notify>
             <span class="nb-icon nb-bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg></span>
@@ -538,6 +538,7 @@
       var toast = btn.parentElement.querySelector('.notify-toast');
       btn.addEventListener('click', function(e){
         e.preventDefault();
+        e.stopPropagation();
         if (!btn.classList.contains('on')){
           btn.classList.add('on');
           if (toast){

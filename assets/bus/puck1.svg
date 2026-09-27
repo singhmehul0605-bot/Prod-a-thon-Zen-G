@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Mask group">
+<mask id="mask0_0_1049" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="12" height="12">
+<circle id="Right half mask" cx="6" cy="6" r="5" stroke="#D63941" stroke-width="2"/>
+</mask>
+<g mask="url(#mask0_0_1049)">
+<path id="Right half" d="M6 0H12V12H6V6V0Z" fill="white"/>
+</g>
+</g>
+</svg>

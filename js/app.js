@@ -92,8 +92,13 @@
     renderCounter();
   }
 
-  minusBtn.addEventListener("click", () => bumpPassengers(-1));
-  plusBtn.addEventListener("click", () => bumpPassengers(1));
+  // this whole widget (counter, swap, change-city, pay) is homepage-only —
+  // other pages that share this script just skip it
+  const hasSearchWidget = counterValueEl && payAmountEl && minusBtn && plusBtn;
+  if (hasSearchWidget) {
+    minusBtn.addEventListener("click", () => bumpPassengers(-1));
+    plusBtn.addEventListener("click", () => bumpPassengers(1));
+  }
 
   /* ---------------------------------------------------------------
    * Swap From / To — spin the button with a spring, cross-fade values
@@ -104,49 +109,51 @@
 
   let swapRotation = 0;
 
-  swapBtn.addEventListener("click", () => {
-    const target = swapRotation + 180;
+  if (swapBtn && fromValueEl && toValueEl) {
+    swapBtn.addEventListener("click", () => {
+      const target = swapRotation + 180;
 
-    spring({
-      from: swapRotation,
-      to: target,
-      damping: 0.8,
-      response: 0.4,
-      onUpdate(v) {
-        swapBtn.style.transform = `rotate(${v}deg)`;
-      },
-      onDone() {
-        swapRotation = target % 360;
-      },
+      spring({
+        from: swapRotation,
+        to: target,
+        damping: 0.8,
+        response: 0.4,
+        onUpdate(v) {
+          swapBtn.style.transform = `rotate(${v}deg)`;
+        },
+        onDone() {
+          swapRotation = target % 360;
+        },
+      });
+
+      spring({
+        from: 1,
+        to: 0,
+        damping: 1,
+        response: 0.16,
+        onUpdate(v) {
+          fromValueEl.style.opacity = v;
+          toValueEl.style.opacity = v;
+        },
+        onDone() {
+          const tmp = fromValueEl.textContent;
+          fromValueEl.textContent = toValueEl.textContent;
+          toValueEl.textContent = tmp;
+
+          spring({
+            from: 0,
+            to: 1,
+            damping: 1,
+            response: 0.22,
+            onUpdate(v) {
+              fromValueEl.style.opacity = v;
+              toValueEl.style.opacity = v;
+            },
+          });
+        },
+      });
     });
-
-    spring({
-      from: 1,
-      to: 0,
-      damping: 1,
-      response: 0.16,
-      onUpdate(v) {
-        fromValueEl.style.opacity = v;
-        toValueEl.style.opacity = v;
-      },
-      onDone() {
-        const tmp = fromValueEl.textContent;
-        fromValueEl.textContent = toValueEl.textContent;
-        toValueEl.textContent = tmp;
-
-        spring({
-          from: 0,
-          to: 1,
-          damping: 1,
-          response: 0.22,
-          onUpdate(v) {
-            fromValueEl.style.opacity = v;
-            toValueEl.style.opacity = v;
-          },
-        });
-      },
-    });
-  });
+  }
 
   /* ---------------------------------------------------------------
    * Top nav tab switching — indicator + label weight follow the tap
@@ -180,6 +187,10 @@
    * ------------------------------------------------------------- */
   const heroVideo = document.getElementById("heroVideo");
   const canvas = document.getElementById("ambientCanvas");
+
+  // pages without a video hero (e.g. bus-buddy.html's static promo banner)
+  // skip ambient sampling and the drag-carousel entirely
+  if (heroVideo && canvas) {
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
   const SAMPLE_INTERVAL = 90;   // ms between frames — ~11fps is plenty once blurred
@@ -328,14 +339,299 @@
   }
 
   /* ---------------------------------------------------------------
+   * Hero slider — draggable 3-panel (prev/current/next) carousel that
+   * auto-advances every 10s. Shared across every page that reuses the
+   * hero component verbatim, so the homepage and the ticket page get
+   * the same content and the same physics.
+   *
+   * Direct manipulation: the track follows the pointer 1:1 while
+   * dragging, a release hands off the gesture's velocity into a
+   * momentum projection (Apple's decay formula) to decide which panel
+   * it settles on, and grabbing again mid-settle reads the track's
+   * live position rather than its target — so it never jumps.
+   * ------------------------------------------------------------- */
+  const HERO_SLIDES = [
+    {
+      video: "assets/hero-video.mp4",
+      title: "Take metro to Coldplay",
+      subtitle: "Happening on 5 Aug at NICE Grounds",
+    },
+    {
+      video: "assets/hero-video-2.mp4",
+      title: "Take metro to Harris Jayaraj",
+      subtitle: "Happening on 12 Aug at NICE Grounds",
+    },
+  ];
+  const SLIDE_INTERVAL = 10000;
+
+  const heroOverlay = document.querySelector(".hero__overlay");
+  const heroTrack = document.getElementById("heroTrack");
+  const heroTrackRow = document.getElementById("heroTrackRow");
+  const heroDotsEl = document.querySelector(".hero__dots");
+  const heroSource = heroVideo.querySelector("source");
+  const panelEls = heroTrackRow ? Array.from(heroTrackRow.children) : [];
+
+  if (heroOverlay && heroTrack && heroTrackRow && heroDotsEl && heroSource && panelEls.length === 3 && HERO_SLIDES.length > 1) {
+    const N = HERO_SLIDES.length;
+    const mod = (n) => ((n % N) + N) % N;
+
+    // dots are generated to match the real slide count, rather than a
+    // fixed markup that could drift out of sync with the data above
+    heroDotsEl.innerHTML = "";
+    const dotEls = HERO_SLIDES.map((_, i) => {
+      const dot = document.createElement("span");
+      dot.className = i === 0 ? "dot dot--active" : "dot";
+      dot.addEventListener("click", () => {
+        // the 3-panel window only ever hops one slide at a time, so a
+        // click jumps toward whichever neighbour that panel actually is
+        if (i === currentIndex) return;
+        if (i === mod(currentIndex + 1)) goRelative(1);
+        else if (i === mod(currentIndex - 1)) goRelative(-1);
+      });
+      heroDotsEl.appendChild(dot);
+      return dot;
+    });
+
+    let currentIndex = 0;
+    let trackWidth = heroTrack.getBoundingClientRect().width;
+    let liveX = -trackWidth; // presentation value — always the source of truth
+    let activeAnim = null;
+    let slideTimer = null;
+    let pointerId = null;
+    let startClientX = 0;
+    let startX = 0;
+    let history = [];
+
+    window.addEventListener("resize", () => {
+      const prevWidth = trackWidth;
+      trackWidth = heroTrack.getBoundingClientRect().width;
+      const wasIdle = pointerId === null && !activeAnim;
+      if (activeAnim) {
+        activeAnim.cancel();
+        activeAnim = null;
+      }
+      // rescale the live position proportionally rather than re-centring
+      // outright — keeps mid-drag/mid-settle state visually consistent
+      setX(wasIdle ? -trackWidth : (liveX / prevWidth) * trackWidth);
+    });
+
+    function renderPanels() {
+      [-1, 0, 1].forEach((offset, panelI) => {
+        const slide = HERO_SLIDES[mod(currentIndex + offset)];
+        panelEls[panelI].querySelector(".hero__title").textContent = slide.title;
+        panelEls[panelI].querySelector(".hero__subtitle").textContent = slide.subtitle;
+      });
+      dotEls.forEach((d, i) => d.classList.toggle("dot--active", i === currentIndex));
+    }
+
+    function setX(px) {
+      liveX = px;
+      heroTrackRow.style.transform = `translateX(${px}px)`;
+      // dim the video toward whichever neighbour is being revealed —
+      // continuous, 1:1 feedback during the gesture, not just at release
+      const drag = Math.min(1, Math.abs(px - -trackWidth) / trackWidth);
+      heroVideo.style.opacity = String(1 - drag * 0.85);
+    }
+
+    function loadSlide(i) {
+      const slide = HERO_SLIDES[i];
+      heroSource.setAttribute("src", slide.video);
+      heroVideo.load();
+      if (!prefersReducedMotion()) heroVideo.play().catch(() => {});
+    }
+
+    // Apple's momentum-projection formula (Designing Fluid Interfaces, WWDC18):
+    // where a flick "would" land if it kept decelerating naturally.
+    function project(velocity, decel = 0.998) {
+      return (velocity / 1000) * decel / (1 - decel);
+    }
+
+    function settle(targetOffset, velocity) {
+      if (activeAnim) activeAnim.cancel();
+      const target = -trackWidth * (1 + targetOffset);
+      const changed = targetOffset !== 0;
+
+      if (prefersReducedMotion()) {
+        setX(target);
+        finishSettle(targetOffset, changed);
+        return;
+      }
+      const flicked = Math.abs(velocity) > 60;
+      activeAnim = spring({
+        from: liveX,
+        to: target,
+        velocity,
+        damping: flicked ? 0.8 : 1,
+        response: flicked ? 0.4 : 0.32,
+        onUpdate: setX,
+        onDone: () => finishSettle(targetOffset, changed),
+      });
+    }
+
+    function finishSettle(targetOffset, changed) {
+      activeAnim = null;
+      if (!changed) return;
+      currentIndex = mod(currentIndex + targetOffset);
+      renderPanels();
+      setX(-trackWidth); // re-centre the window — content already matches
+      loadSlide(currentIndex);
+    }
+
+    function goRelative(offset) {
+      settle(offset, 0);
+    }
+
+    function velocityFromHistory() {
+      if (history.length < 2) return 0;
+      const last = history[history.length - 1];
+      const first = history[0];
+      const dt = last.t - first.t;
+      return dt > 0 ? ((last.x - first.x) / dt) * 1000 : 0;
+    }
+
+    function onPointerDown(e) {
+      if (pointerId !== null) return;
+      pointerId = e.pointerId;
+      try {
+        heroTrack.setPointerCapture(pointerId);
+      } catch (err) {}
+      if (activeAnim) activeAnim.cancel(); // grab it mid-flight, from where it visually is
+      startClientX = e.clientX;
+      startX = liveX;
+      history = [{ x: e.clientX, t: performance.now() }];
+      stopSlider();
+    }
+
+    function onPointerMove(e) {
+      if (e.pointerId !== pointerId) return;
+      const dx = e.clientX - startClientX;
+      const next = Math.max(-2 * trackWidth, Math.min(0, startX + dx));
+      setX(next);
+      history.push({ x: e.clientX, t: performance.now() });
+      if (history.length > 6) history.shift();
+    }
+
+    function onPointerUp(e) {
+      if (e.pointerId !== pointerId) return;
+      // capture can already be gone (e.g. lost to a scroll) — release is
+      // best-effort cleanup, never a reason to abort the settle below
+      try {
+        heroTrack.releasePointerCapture(pointerId);
+      } catch (err) {}
+      pointerId = null;
+
+      const velocity = velocityFromHistory();
+      const projected = liveX + project(velocity);
+      const candidates = [0, -trackWidth, -2 * trackWidth];
+      const nearest = candidates.reduce((a, b) =>
+        Math.abs(b - projected) < Math.abs(a - projected) ? b : a
+      );
+      // candidates are trackWidth * {0, -1, -2} for {prev, current, next};
+      // map back to a -1/0/+1 offset relative to the current index
+      const targetOffset = Math.round(-1 * (nearest / trackWidth + 1));
+      settle(targetOffset, velocity);
+      startSlider();
+    }
+
+    heroTrack.addEventListener("pointerdown", onPointerDown);
+    heroTrack.addEventListener("pointermove", onPointerMove);
+    heroTrack.addEventListener("pointerup", onPointerUp);
+    heroTrack.addEventListener("pointercancel", onPointerUp);
+
+    function startSlider() {
+      if (slideTimer || prefersReducedMotion()) return;
+      slideTimer = setInterval(() => goRelative(1), SLIDE_INTERVAL);
+    }
+    function stopSlider() {
+      clearInterval(slideTimer);
+      slideTimer = null;
+    }
+
+    renderPanels();
+    setX(-trackWidth);
+    startSlider();
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stopSlider();
+      else if (pointerId === null) startSlider();
+    });
+  }
+  } // end if (heroVideo && canvas)
+
+  /* ---------------------------------------------------------------
    * Change city / T&C — placeholders until those flows exist
    * ------------------------------------------------------------- */
-  document.getElementById("changeCity").addEventListener("click", () => {
-    console.info("Change city tapped — wire up the city picker sheet here.");
-  });
-  document.getElementById("payBtn").addEventListener("click", () => {
-    console.info("Pay tapped — wire up checkout here.");
+  const changeCityBtn = document.getElementById("changeCity");
+  const payBtn = document.getElementById("payBtn");
+  if (changeCityBtn) {
+    changeCityBtn.addEventListener("click", () => {
+      console.info("Change city tapped — wire up the city picker sheet here.");
+    });
+  }
+  if (payBtn) {
+    payBtn.addEventListener("click", () => {
+      window.location.href = "metro-buddy.html";
+    });
+  }
+
+  const searchBusesBtn = document.getElementById("searchBusesBtn");
+  if (searchBusesBtn) {
+    searchBusesBtn.addEventListener("click", () => {
+      window.location.href = "bus-buddy.html";
+    });
+  }
+
+  if (hasSearchWidget) renderCounter();
+
+  /* ---------------------------------------------------------------
+   * Ticket details page — close button + copy-to-clipboard
+   * ------------------------------------------------------------- */
+  const ticketClose = document.getElementById("ticketClose");
+  if (ticketClose) {
+    ticketClose.addEventListener("click", () => {
+      if (document.referrer) window.history.back();
+      else window.location.href = ticketClose.dataset.back || "metro-home.html";
+    });
+  }
+
+  /* ---------------------------------------------------------------
+   * Bus Buddy tabs — only "Ticket details" has content in this build,
+   * so the rest just take the active state without swapping a panel
+   * ------------------------------------------------------------- */
+  const busTabs = document.querySelectorAll(".bus-tab");
+  busTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      busTabs.forEach((t) => t.classList.toggle("bus-tab--active", t === tab));
+      tab.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    });
   });
 
-  renderCounter();
+  /* ---------------------------------------------------------------
+   * Bus homepage — day pills + woman-mode toggle
+   * ------------------------------------------------------------- */
+  const dayPills = document.querySelectorAll(".bh-daypill");
+  dayPills.forEach((pill) => {
+    pill.addEventListener("click", () => {
+      dayPills.forEach((p) => p.classList.toggle("bh-daypill--active", p === pill));
+    });
+  });
+
+  const bhToggle = document.querySelector(".bh-toggle");
+  if (bhToggle) {
+    bhToggle.addEventListener("click", () => {
+      const on = bhToggle.getAttribute("aria-checked") === "true";
+      bhToggle.setAttribute("aria-checked", String(!on));
+    });
+  }
+
+  document.querySelectorAll(".copy-btn[data-copy]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy);
+        btn.classList.add("is-copied");
+        setTimeout(() => btn.classList.remove("is-copied"), 900);
+      } catch {
+        /* clipboard permission denied — no-op */
+      }
+    });
+  });
 })();

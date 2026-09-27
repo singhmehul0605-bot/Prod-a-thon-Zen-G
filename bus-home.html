@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Book Bus Tickets — redBus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/styles.css?v=3" />
+<link rel="stylesheet" href="css/motion.css" />
+<link rel="stylesheet" href="css/bus-home.css?v=3" />
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ============ NAV : Figma node 49:17349/49:17191 "Header / TopNav" ============ -->
+  <header class="bh-nav">
+    <img class="bh-nav__logo" src="assets/bushome/logo-redbus.svg" alt="redBus" width="34" height="26" />
+    <div class="bh-nav__buttons">
+      <button class="bh-pill" type="button">
+        <img src="assets/bushome/globe.svg" alt="" width="16" height="16" />
+        <span>Eng</span>
+        <img src="assets/bushome/expand-more.svg" alt="" width="16" height="16" />
+      </button>
+      <button class="bh-pill" type="button">
+        <img src="assets/bushome/wallet.svg" alt="" width="16" height="16" />
+        <span>Wallet</span>
+        <span class="bh-pill__badge">₹500</span>
+      </button>
+      <button class="bh-pill bh-pill--icon" type="button" aria-label="Account">
+        <img src="assets/bushome/my-account.svg" alt="" width="16" height="16" />
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ LOB CARDS : Figma node 49:17353 "_Non Scrollable tabs" ============ -->
+  <nav class="bh-lobs" aria-label="Travel modes">
+    <a class="bh-lob bh-lob--active" href="bus-home.html">
+      <img src="assets/bushome/lob-bus.png" alt="" />
+      <span>Bus</span>
+    </a>
+    <a class="bh-lob" href="#">
+      <img src="assets/bushome/lob-train.png" alt="" />
+      <span>Train</span>
+    </a>
+    <a class="bh-lob" href="#">
+      <img src="assets/bushome/lob-hotel.png" alt="" />
+      <span>Hotel</span>
+    </a>
+    <a class="bh-lob" href="metro-home.html">
+      <img src="assets/bushome/lob-metro.png" alt="" />
+      <span>Metro</span>
+    </a>
+  </nav>
+
+  <!-- ============ PURPLE CARD : search widget + events promo, Figma node 49:17354 ============ -->
+  <section class="bh-purple">
+
+    <h1 class="bh-purple__title">Book bus tickets</h1>
+
+    <div class="bh-search">
+      <div class="bh-search__fields">
+        <div class="bh-field">
+          <img class="bh-field__icon" src="assets/bushome/boarding-point.svg" alt="" width="24" height="24" />
+          <span class="bh-field__labels">
+            <span class="bh-field__caption">From</span>
+            <span class="bh-field__value">Bangalore</span>
+          </span>
+        </div>
+
+        <div class="bh-divider"></div>
+
+        <div class="bh-field">
+          <img class="bh-field__icon" src="assets/bushome/dropping-point.svg" alt="" width="24" height="24" />
+          <span class="bh-field__labels">
+            <span class="bh-field__caption">To</span>
+            <span class="bh-field__value">Chennai</span>
+          </span>
+        </div>
+
+        <button class="bh-swap" type="button" aria-label="Swap from and to">
+          <img src="assets/bushome/swap-vertical.svg" alt="" width="24" height="24" />
+        </button>
+
+        <div class="bh-divider"></div>
+
+        <div class="bh-field bh-field--date">
+          <img class="bh-field__icon" src="assets/bushome/date-range.svg" alt="" width="24" height="24" />
+          <span class="bh-field__labels">
+            <span class="bh-field__caption">Date of Journey</span>
+            <span class="bh-field__value"><span class="bh-field__value--light">Sun</span> 10-Mar</span>
+          </span>
+          <div class="bh-daypills">
+            <button class="bh-daypill bh-daypill--active" type="button">Today</button>
+            <button class="bh-daypill" type="button">Tomorrow</button>
+          </div>
+        </div>
+
+        <div class="bh-divider"></div>
+
+        <div class="bh-womanrow">
+          <img src="assets/bushome/face3.svg" alt="" width="24" height="24" />
+          <span class="bh-womanrow__text">
+            <span class="bh-womanrow__title">Booking for woman</span>
+            <span class="bh-womanrow__link">Know more</span>
+          </span>
+          <button class="bh-toggle" type="button" role="switch" aria-checked="false" aria-label="Booking for woman">
+            <span class="bh-toggle__puck"></span>
+          </button>
+        </div>
+      </div>
+
+      <button class="bh-search__cta" id="searchBusesBtn" type="button">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="#fff" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        Search buses
+      </button>
+    </div>
+
+    <!-- ============ EVENTS PROMO : title/subtext + stacked cards, structure per ============
+         ============ Figma node 52:18111 (fanned-card reference), content per photos ======= -->
+    <div class="bh-events">
+      <h2 class="bh-events__title">Coldplay, Harris Jayaraj, AR Rahman are playing in Bangalore this week</h2>
+      <p class="bh-events__subtitle">Book metro to get there</p>
+
+      <div class="bh-cardstack">
+        <div class="bh-cardstack__card bh-cardstack__card--left" style="background: linear-gradient(160deg, #1a1440, #3a2a6b 55%, #0171a0);">
+          <span class="bh-cardstack__label">A R Rahman<br />The Wonderment Tour</span>
+        </div>
+        <div class="bh-cardstack__card bh-cardstack__card--right" style="background: linear-gradient(160deg, #120026, #4a1d6b 55%, #7a2fb5);">
+          <span class="bh-cardstack__label">Rock On Harris</span>
+        </div>
+        <div class="bh-cardstack__card bh-cardstack__card--center" style="background: linear-gradient(160deg, #05060f, #101a2e 55%, #1b2f52);">
+          <span class="bh-cardstack__label">Coldplay</span>
+        </div>
+      </div>
+      <a class="bh-events__cta" href="events-home.html">Know more <span aria-hidden="true">›</span></a>
+    </div>
+  </section>
+
+  <!-- ============ EXPLORE : Figma node 49:17356 "Secondary LOBs" ============ -->
+  <section class="bh-explore">
+    <div class="bh-explore__head">
+      <div>
+        <h3 class="bh-explore__title">Explore</h3>
+        <p class="bh-explore__subtitle">Other products for your comfort</p>
+      </div>
+      <a class="bh-explore__viewall" href="#">View all</a>
+    </div>
+    <div class="bh-utility">
+      <div class="bh-utility__item">
+        <img src="assets/bushome/util-hourly.png" alt="" width="20" height="20" />
+        <span>Hourly stays</span>
+      </div>
+      <div class="bh-utility__item">
+        <img src="assets/bushome/util-pnr.png" alt="" width="20" height="20" />
+        <span>Check PNR</span>
+      </div>
+      <div class="bh-utility__item">
+        <img src="assets/bushome/util-status.png" alt="" width="20" height="20" />
+        <span>Train status</span>
+      </div>
+      <div class="bh-utility__item">
+        <img src="assets/bushome/util-pilgrim.png" alt="" width="20" height="20" />
+        <span>Pilgrim trips</span>
+      </div>
+      <div class="bh-utility__item">
+        <img src="assets/bushome/util-rtc.png" alt="" width="20" height="20" />
+        <span>RTC buses</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BOTTOM NAVIGATION ============ -->
+  <nav class="bottomnav" aria-label="Primary">
+    <button class="bnav-item bnav-item--active" data-nav="home" type="button">
+      <svg class="bnav-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9a1 1 0 0 0 1 1h3v-5a2 2 0 1 1 4 0v5h3a1 1 0 0 0 1-1v-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="bnav-label">Home</span>
+    </button>
+    <button class="bnav-item" data-nav="bookings" type="button">
+      <svg class="bnav-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span class="bnav-label">Bookings</span>
+    </button>
+    <button class="bnav-item" data-nav="offers" type="button">
+      <svg class="bnav-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true"><path d="M20 12 12 20l-8-8 8-8h8v8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="15" cy="9" r="1.4" fill="currentColor"/></svg>
+      <span class="bnav-label">Offers</span>
+    </button>
+    <button class="bnav-item" data-nav="help" type="button">
+      <svg class="bnav-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.8"/><path d="M9.7 9.6a2.3 2.3 0 1 1 3.3 2.1c-.9.5-1 1-1 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.4" r="0.9" fill="currentColor"/></svg>
+      <span class="bnav-label">Help</span>
+    </button>
+    <button class="bnav-item" data-nav="account" type="button">
+      <svg class="bnav-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.8" r="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M6.6 18.2c1-2.2 3-3.3 5.4-3.3s4.4 1.1 5.4 3.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span class="bnav-label">Account</span>
+    </button>
+    <div class="bnav-handle" aria-hidden="true"></div>
+  </nav>
+
+</div>
+
+<script src="js/app.js?v=9"></script>
+</body>
+</html>

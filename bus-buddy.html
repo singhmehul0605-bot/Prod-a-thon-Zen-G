@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Bus Buddy — redBus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/styles.css?v=3" />
+<link rel="stylesheet" href="css/motion.css" />
+<link rel="stylesheet" href="css/ticket.css?v=3" />
+<link rel="stylesheet" href="css/bus.css?v=3" />
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true">
+  <canvas id="ambientCanvas" width="48" height="27"></canvas>
+</div>
+
+<div class="app" id="app">
+
+  <!-- ============ HERO : reused verbatim from index.html/metro-buddy.html — ============
+       ============ identical video, ambient/vibrancy layers, overlay copy, ==============
+       ============ CTA and dots, at the same 359px height/full width. ==================== -->
+  <section class="hero" id="hero">
+
+    <div class="hero__media">
+      <video class="hero__video" id="heroVideo" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.svg">
+        <source src="assets/hero-video.mp4" type="video/mp4" />
+      </video>
+      <div class="hero__ambient" aria-hidden="true"></div>
+      <div class="hero__vibrancy" aria-hidden="true"></div>
+    </div>
+
+    <!-- translucent ticket header, overlaid on the video (same scrim language as metro-buddy) -->
+    <header class="ticket-topbar">
+      <div class="ticket-topbar__scrim" aria-hidden="true"></div>
+      <button class="ticket-topbar__icon" type="button" aria-label="Close" id="ticketClose" data-back="bus-home.html">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="ticket-topbar__text">
+        <h1 class="ticket-topbar__title">Ticket details</h1>
+        <p class="ticket-topbar__subtitle">Ticket #TS8P86396626</p>
+      </div>
+      <button class="ticket-topbar__icon" type="button" aria-label="Support">
+        <img src="assets/bus/support-agent.svg" alt="" width="24" height="24" style="filter: brightness(0) invert(1);" />
+      </button>
+      <button class="ticket-topbar__icon" type="button" aria-label="Share">
+        <img src="assets/bus/share.svg" alt="" width="24" height="24" style="filter: brightness(0) invert(1);" />
+      </button>
+    </header>
+
+    <!-- Apple-TV style gradient scrim + overlay copy, bottom of hero — identical to metro-buddy -->
+    <div class="hero__overlay" id="heroOverlay">
+      <div class="hero__track" id="heroTrack">
+        <div class="hero__track__row" id="heroTrackRow">
+          <div class="hero__slide"><p class="hero__title"></p><p class="hero__subtitle"></p></div>
+          <div class="hero__slide"><p class="hero__title"></p><p class="hero__subtitle"></p></div>
+          <div class="hero__slide"><p class="hero__title"></p><p class="hero__subtitle"></p></div>
+        </div>
+      </div>
+      <a class="hero__cta" href="events-home.html">Know more <span class="hero__cta-arrow" aria-hidden="true">›</span></a>
+
+      <div class="hero__dots" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- ============ TRAY : ticket + bus info, per Figma node 45:10755 ============ -->
+  <main class="sheet tray">
+
+    <div class="tray__handle" aria-hidden="true"><span></span></div>
+
+    <nav class="bus-tabs" id="busTabs" aria-label="Ticket sections">
+      <button class="bus-tab bus-tab--active" type="button" data-tab="ticket">Ticket details</button>
+      <button class="bus-tab" type="button" data-tab="tracking">Live tracking</button>
+      <button class="bus-tab" type="button" data-tab="boarding">Boarding points</button>
+      <button class="bus-tab" type="button" data-tab="route">Bus route</button>
+      <button class="bus-tab" type="button" data-tab="rest">Rest stop</button>
+      <button class="bus-tab" type="button" data-tab="amenities">Amenities</button>
+      <button class="bus-tab" type="button" data-tab="reviews">Reviews</button>
+      <button class="bus-tab" type="button" data-tab="policies">Policies</button>
+    </nav>
+
+    <div class="bus-ticket-wrap">
+      <div class="bus-ticket">
+
+        <div class="bus-ticket__route">
+          <div class="bus-stop">
+            <div class="bus-stop__graphic">
+              <span class="bus-stop__dot"><img src="assets/bus/arrow-outward.svg" alt="" width="8" height="8" /></span>
+              <span class="bus-stop__line"></span>
+            </div>
+            <div class="bus-stop__body">
+              <div class="bus-stop__head">
+                <span class="bus-stop__city">Bangalore</span>
+                <span class="bus-stop__time">17:13</span>
+              </div>
+              <div class="bus-stop__head">
+                <span class="bus-stop__addr">Madiwala</span>
+                <span class="bus-stop__date">Sun, 18 Jun</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bus-duration">
+            <span class="bus-duration__line"></span>
+            <img class="bus-duration__logo" src="assets/bus/logo-redbus.svg" alt="redBus" />
+            <span class="bus-duration__text">8h 20min</span>
+            <span class="bus-duration__line"></span>
+          </div>
+
+          <div class="bus-stop">
+            <div class="bus-stop__graphic">
+              <span class="bus-stop__line"></span>
+              <span class="bus-stop__dot"><img src="assets/bus/arrow-outward2.svg" alt="" width="8" height="8" /></span>
+            </div>
+            <div class="bus-stop__body">
+              <div class="bus-stop__head">
+                <span class="bus-stop__city">Chennai</span>
+                <span class="bus-stop__time">02:40</span>
+              </div>
+              <div class="bus-stop__head">
+                <span class="bus-stop__addr">Vijaywada</span>
+                <span class="bus-stop__date">Mon, 19 Jan</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bus-layover">
+            <img src="assets/bus/airline-stops.svg" alt="" width="16" height="16" />
+            <span>1 h Layover at Kashmeri Gate, New Delhi</span>
+          </div>
+          <div class="bus-layover__divider"></div>
+        </div>
+
+        <div class="bus-ticket__info">
+          <div class="bus-ticket__info-main">
+            <div class="bus-plate-row">
+              <span class="bus-plate">
+                <img src="assets/bus/ellipse.svg" alt="" width="2" height="2" />
+                KA 03 K 2345
+                <img src="assets/bus/ellipse.svg" alt="" width="2" height="2" />
+              </span>
+            </div>
+            <p class="bus-operator">Sri Krishna Travels</p>
+            <div class="bus-pax-row">
+              <div class="bus-pax-names">
+                <span>Netesh Chandra</span>
+                <span>Ishan Jalan</span>
+              </div>
+              <div class="bus-seats">
+                <span class="bus-seat">A6</span>
+                <span class="bus-seat">A17</span>
+              </div>
+            </div>
+            <p class="bus-pax-extra">+3 Passengers</p>
+          </div>
+        </div>
+
+        <div class="bus-ticket__scallop">
+          <img class="scallop scallop--top" src="assets/ticket/scallop.svg" alt="" width="328" height="16" />
+          <img class="scallop scallop--bottom" src="assets/ticket/scallop.svg" alt="" width="328" height="16" />
+        </div>
+
+        <div class="bus-ticket__cta">
+          <button class="bus-cta-link" type="button">
+            Ticket details
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true"><path d="M9.5 6l6 6-6 6" stroke="#6f6f6f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <p class="bus-info-note">Bus number and tracking details will be shared on the day of journey on <b>+919741862088</b></p>
+    </div>
+
+  </main>
+
+</div>
+
+<script src="js/app.js?v=9"></script>
+</body>
+</html>

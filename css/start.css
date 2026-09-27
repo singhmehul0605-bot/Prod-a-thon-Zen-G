@@ -1,0 +1,86 @@
+/* =========================================================
+   Prototype entry screen — picks between the bus flow and the
+   metro flow. Not part of the Figma spec; a plain, on-brand
+   router page so GitHub Pages has somewhere sensible to land.
+   ========================================================= */
+:root{ color-scheme: light; }
+html, body{ margin: 0; }
+body{
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(180deg, #fdecec 0%, #f4f3fb 55%, #eef0fb 100%);
+  min-height: 100vh;
+}
+
+.start{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--vu) * 8);
+  padding: calc(var(--vu) * 32) calc(var(--vu) * 24);
+  text-align: center;
+}
+
+.start__logo{ height: calc(var(--vu) * 48); width: auto; margin-bottom: calc(var(--vu) * 8); }
+
+.start__title{
+  margin: 0;
+  font-size: calc(var(--vu) * 24);
+  line-height: calc(var(--vu) * 30);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+  color: var(--c-text-primary);
+}
+.start__subtitle{
+  margin: 0 0 calc(var(--vu) * 16);
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  color: var(--c-text-secondary);
+}
+
+.start__ctas{
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--vu) * 12);
+  width: 100%;
+  max-width: calc(var(--vu) * 328);
+}
+
+.start__cta{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(var(--vu) * 2);
+  padding: calc(var(--vu) * 16) calc(var(--vu) * 44) calc(var(--vu) * 16) calc(var(--vu) * 20);
+  border-radius: var(--r-16);
+  text-align: left;
+  text-decoration: none;
+  color: #fff;
+  box-shadow: 0 calc(var(--vu)*8) calc(var(--vu)*20) rgba(0,0,0,0.18);
+  transition: transform 120ms var(--ease-standard);
+}
+.start__cta:active{ transform: scale(0.97); }
+
+.start__cta--bus{ background: linear-gradient(135deg, #d63941, #8f1f26); }
+.start__cta--metro{ background: linear-gradient(135deg, #303030, #14387a); }
+
+.start__cta-label{
+  font-size: var(--fs-18);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+}
+.start__cta-sub{
+  font-size: var(--fs-13);
+  line-height: var(--lh-18);
+  color: rgba(255,255,255,0.82);
+}
+.start__cta-arrow{
+  position: absolute;
+  top: 50%; right: calc(var(--vu) * 16);
+  transform: translateY(-50%);
+  font-size: calc(var(--vu) * 24);
+  line-height: 1;
+  color: rgba(255,255,255,0.7);
+}

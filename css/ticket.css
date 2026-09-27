@@ -1,0 +1,296 @@
+/* =========================================================
+   Ticket details page ("Metro Buddy") — Figma node 28:6851
+   Reuses .app / .ambient / .hero / .sheet from styles.css verbatim;
+   everything below is specific to this page only.
+   ========================================================= */
+
+/* -------- translucent ticket header, overlaid on the video -------- */
+.ticket-topbar{
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-8) var(--sp-4);
+}
+
+.ticket-topbar__scrim{
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0) 100%);
+  -webkit-backdrop-filter: blur(calc(var(--vu)*1.2));
+  backdrop-filter: blur(calc(var(--vu)*1.2));
+  pointer-events: none;
+}
+
+.ticket-topbar__icon{
+  position: relative;
+  z-index: 1;
+  display: flex; align-items:center; justify-content:center;
+  width: calc(var(--vu)*48); height: calc(var(--vu)*48);
+  flex-shrink: 0;
+  border-radius: 50%;
+  transition: transform 120ms var(--ease-standard), background 120ms;
+}
+.ticket-topbar__icon svg{ filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4)); }
+.ticket-topbar__icon:active{ transform: scale(0.9); background: rgba(255,255,255,0.15); }
+
+.ticket-topbar__text{
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+  height: calc(var(--vu)*48);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+.ticket-topbar__title{
+  margin: 0;
+  font-size: var(--fs-16);
+  line-height: var(--lh-24);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.45);
+  white-space: nowrap;
+}
+.ticket-topbar__subtitle{
+  margin: 0;
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  letter-spacing: var(--ls-medium);
+  color: rgba(255,255,255,0.78);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* -------- tray: light grey backdrop so the ticket-stub notch (below)
+   actually reads as a cut, rather than white-on-white -------- */
+.tray{
+  background: #f0eef1;
+  padding-bottom: calc(var(--sp-24) + var(--nav-height, 0px));
+}
+
+/* -------- ticket card -------- */
+/* no background on the card itself — the scallop cutout below needs the
+   tray's grey to show through at that strip, so white lives on each
+   section individually instead of one continuous fill behind everything */
+/* -------- bottom-sheet drag handle (Figma node 33:18042, DroidBottomSheet) -------- */
+.tray__handle{
+  height: calc(var(--vu)*24);
+  background: var(--c-bg-component);
+  border-radius: var(--r-16) var(--r-16) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tray__handle span{
+  width: calc(var(--vu)*36);
+  height: calc(var(--vu)*4);
+  border-radius: calc(var(--vu)*2);
+  background: #c7c7c7;
+}
+
+.ticket-card{
+  margin: var(--sp-8) var(--sp-16) 0;
+  border-radius: var(--r-16);
+  overflow: hidden;
+  box-shadow: 0 calc(var(--vu)*4) calc(var(--vu)*5.5) rgba(29,29,29,0.19);
+}
+
+.ticket-card__route{
+  position: relative;
+  background: var(--c-primary);
+  padding-top: var(--sp-16);
+  display: flex;
+  flex-direction: column;
+}
+.route-connector{
+  position: absolute;
+  left: calc(var(--vu)*18);
+  top: calc(var(--vu)*32);
+  height: calc(var(--vu)*32);
+  width: 1px;
+  background: rgba(255,255,255,0.4);
+  transform: translateX(-50%);
+}
+.route-row{
+  position: relative;
+  min-height: calc(var(--vu)*32);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--vu)*8);
+  padding: 0 var(--sp-16) 0 var(--sp-8);
+}
+.route-row:last-child{ padding-bottom: var(--sp-16); }
+.route-row__dot{
+  position: absolute;
+  left: calc(var(--vu)*18);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--vu)*8); height: calc(var(--vu)*8);
+  border-radius: 50%;
+  background: #fff;
+  z-index: 1;
+}
+.route-row__name{
+  margin-left: calc(var(--vu)*20);
+  font-size: var(--fs-22);
+  line-height: calc(var(--vu)*28);
+  font-weight: 700;
+  letter-spacing: calc(var(--vu)*-0.4);
+  color: var(--c-text-inverse);
+}
+
+.ticket-card__details{
+  background: var(--c-bg-component);
+  padding: var(--sp-16) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.ticket-card__fare{
+  background: var(--c-bg-component);
+  padding-bottom: var(--sp-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.detail-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sp-16);
+}
+.detail-row__label{
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  letter-spacing: var(--ls-medium);
+  color: var(--c-text-secondary);
+}
+.detail-row__label--dark{ color: var(--c-text-primary); }
+.detail-row__value{
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  font-weight: 500;
+  letter-spacing: var(--ls-medium);
+  color: var(--c-text-primary);
+}
+.detail-row__value--success{ color: #007b2d; }
+.detail-row--total .detail-row__label{ font-weight: 400; }
+.detail-row__value--total{
+  font-size: var(--fs-16);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+}
+
+.copy-btn{
+  display: flex; align-items: center; justify-content: center;
+  width: calc(var(--vu)*18); height: calc(var(--vu)*18);
+  transition: opacity 120ms;
+}
+.copy-btn:active{ opacity: 0.5; }
+.copy-btn.is-copied svg path{ stroke: var(--c-text-success); }
+.copy-btn.is-copied svg rect{ stroke: var(--c-text-success); }
+
+/* -------- ticket-stub scallop cutout -------- */
+.ticket-card__scallop{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.scallop{ display:block; width:100%; height:auto; }
+.scallop--bottom{ transform: scaleY(-1); }
+.scallop__label{
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-10);
+  white-space: nowrap;
+  font-size: var(--fs-12);
+  line-height: var(--lh-16);
+  color: var(--c-text-secondary);
+}
+.scallop__divider{ display:block; width: calc(var(--vu)*42); height: 1px; }
+
+/* -------- QR -------- */
+.ticket-card__qr{
+  background: var(--c-bg-component);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-16);
+}
+.qr-valid{
+  margin: 0;
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  font-weight: 700;
+  letter-spacing: var(--ls-medium);
+  color: #bd5500;
+}
+.qr-image{
+  width: calc(var(--vu)*226);
+  height: calc(var(--vu)*226);
+  margin-top: var(--sp-16);
+}
+
+/* -------- footer note -------- */
+.tray__note{
+  margin: var(--sp-24) var(--sp-16) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+  font-size: var(--fs-14);
+  font-weight: 500;
+  letter-spacing: var(--ls-medium);
+  color: var(--c-text-primary);
+  white-space: nowrap;
+}
+.tray__note img{ width: calc(var(--vu)*24); height: calc(var(--vu)*24); flex-shrink:0; object-fit: contain; }
+
+/* -------- CTA card -------- */
+.tray__cta{ margin: var(--sp-24) var(--sp-16) 0; }
+.cta-row{
+  display: flex;
+  align-items: center;
+  gap: var(--sp-16);
+  width: 100%;
+  min-height: calc(var(--vu)*71);
+  padding: var(--sp-8) var(--sp-16);
+  border: 1px solid var(--c-border-divider);
+  border-radius: var(--r-16);
+  background: var(--c-bg-component);
+  text-align: left;
+  transition: transform 120ms var(--ease-standard), background 120ms;
+}
+.cta-row:active{ transform: scale(0.98); background: #fafafa; }
+.cta-row__icon{ flex-shrink:0; }
+.cta-row__text{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.cta-row__title{
+  font-size: var(--fs-16);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+  color: var(--c-text-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.cta-row__subtitle{
+  font-size: var(--fs-14);
+  line-height: var(--lh-20);
+  letter-spacing: var(--ls-medium);
+  color: var(--c-text-secondary);
+}
+.cta-row__chevron{ flex-shrink:0; }
