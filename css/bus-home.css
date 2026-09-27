@@ -258,20 +258,16 @@
   width: calc(var(--vu) * 90);
   height: calc(var(--vu) * 124);
   border-radius: var(--r-16);
+  overflow: hidden;
   box-shadow: 0 calc(var(--vu)*8) calc(var(--vu)*20) rgba(0,0,0,0.35);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: calc(var(--vu) * 10);
-  background-size: cover;
-  background-position: center;
+  background: #1a1a2e;
 }
-.bh-cardstack__label{
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 14px;
-  color: rgba(255,255,255,0.92);
-  text-align: center;
+.bh-cardstack__img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 260ms var(--ease-standard);
 }
 .bh-cardstack__card--left{
   z-index: 1;
@@ -284,6 +280,35 @@
 .bh-cardstack__card--center{
   z-index: 2;
   transform: translate(-50%, -50%);
+}
+
+/* entrance: cards fan out from behind the center card into their resting
+   spots, staggered so the eye follows left -> right -> center */
+@media (prefers-reduced-motion: no-preference){
+  .bh-cardstack__card--left{
+    animation: bhCardInLeft 640ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 80ms;
+  }
+  .bh-cardstack__card--right{
+    animation: bhCardInRight 640ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 200ms;
+  }
+  .bh-cardstack__card--center{
+    animation: bhCardInCenter 640ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 320ms;
+  }
+}
+@keyframes bhCardInLeft{
+  from{ opacity: 0; transform: translate(-92%, -40%) rotate(-12deg) scale(0.75); }
+  to{ opacity: 1; transform: translate(-92%, -58%) rotate(-12deg) scale(1); }
+}
+@keyframes bhCardInRight{
+  from{ opacity: 0; transform: translate(-8%, -40%) rotate(12deg) scale(0.75); }
+  to{ opacity: 1; transform: translate(-8%, -58%) rotate(12deg) scale(1); }
+}
+@keyframes bhCardInCenter{
+  from{ opacity: 0; transform: translate(-50%, -35%) scale(0.75); }
+  to{ opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 .bh-events__cta{

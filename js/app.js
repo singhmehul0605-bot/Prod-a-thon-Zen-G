@@ -623,6 +623,30 @@
     });
   }
 
+  /* ---------------------------------------------------------------
+   * Bus homepage — fanned event-card stack keeps shuffling which
+   * photo sits in the left/right/center slot, crossfading in place
+   * so the fan-out positions (and their entrance animation) never move
+   * ------------------------------------------------------------- */
+  const cardstack = document.getElementById("bhCardstack");
+  if (cardstack && !prefersReducedMotion()) {
+    const slots = ["left", "right", "center"].map((pos) => ({
+      img: cardstack.querySelector(`.bh-cardstack__card--${pos} .bh-cardstack__img`),
+    }));
+    let sources = slots.map((s) => s.img.src);
+
+    setInterval(() => {
+      sources.push(sources.shift());
+      slots.forEach((slot, i) => {
+        slot.img.style.opacity = "0";
+        setTimeout(() => {
+          slot.img.src = sources[i];
+          slot.img.style.opacity = "1";
+        }, 220);
+      });
+    }, 3200);
+  }
+
   document.querySelectorAll(".copy-btn[data-copy]").forEach((btn) => {
     btn.addEventListener("click", async () => {
       try {
